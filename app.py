@@ -22,7 +22,7 @@ def query(q: str):
     context = res["documents"][0][0] if res["documents"] else ""
 
     if USE_MOCK_LLM:
-        return {"context": context}
+        return {"answer": context}
 
     if not USE_MOCK_LLM:
         answer = ollama_client.generate(
