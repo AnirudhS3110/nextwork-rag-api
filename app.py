@@ -10,9 +10,11 @@ container = client.get_collection("docs")
 
 USE_MOCK_LLM = os.getenv("USE_MOCK_LLM","0") == "1"
 
+HOST_URL = os.getenv("HOST_URL","http://host.docker.internal:11434")
+
 if not USE_MOCK_LLM:
     import ollama
-    ollama_client = ollama.Client(host="http://127.0.0.1:11434")
+    ollama_client = ollama.Client(host=HOST_URL)
 
 app = FastAPI()
 
