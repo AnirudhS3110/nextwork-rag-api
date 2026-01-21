@@ -1,11 +1,18 @@
 from fastapi import FastAPI
 import chromadb
-import ollama
+# import ollama
 import uuid
+import os
 
 client = chromadb.PersistentClient(path="./db")
 container = client.get_collection("docs")
-ollama_client = ollama.Client(host="http://127.0.0.1:11434")
+
+
+USE_MOCK_LLM = os.getenv("USE_MOCK_LLM","0") == "1"
+
+if not USE_MOCK_LLM:
+    import ollama
+    ollama_client = ollama.Client(host="http://127.0.0.1:11434")
 
 app = FastAPI()
 
@@ -14,15 +21,19 @@ def query(q: str):
     res = container.query(query_texts=[q], n_results=1, include=["documents"])
     context = res["documents"][0][0] if res["documents"] else ""
 
-    answer = ollama_client.generate(
+    if USE_MOCK_LLM:
+        return {"context": context}
+
+    if not USE_MOCK_LLM:
+        answer = ollama_client.generate(
         model="tinyllama",
         prompt=f"Context:\n{context}\n\nQuestion: {q}\n\nAnswer clearly and concisely:",
         options={
             "num_predict": 2000
         }
-    )
+         )
 
-    return {"answer": answer["response"]}
+        return {"answer": answer["response"]}
 
 @app.post("/add")
 def addNew(description: str):

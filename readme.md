@@ -10,3 +10,9 @@
 ![alt text](image-5.png)
 ![alt text](image-6.png)
 - Think of it like this: If your node is the building, NodePort is the front door (port 30000), the Service is the receptionist who knows where to send visitors, and your Pod is the office where your API actually works!
+
+## Non-deterministic LLM Behaviour:
+![alt text](image-7.png)
+![alt text](image-8.png)
+- This problem is Solved by using `Mock LLM Mode`
+![alt text](image-9.png)
